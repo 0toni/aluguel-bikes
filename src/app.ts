@@ -41,4 +41,46 @@ export class App {
     returnBike(id: string): Bike | undefined{
         return this.bikes.find(bike => {return bike.id === id})
     }
+
+    listUsers(): User[]{
+        var i=0
+        var users = []
+
+        for(i; i< this.users.length; i++){
+            users[i]=this.users[i]
+        }
+
+        return users
+    }
+
+    listBikes(): Bike[]{
+        var i=0
+        var bikes = []
+
+        for(i; i< this.bikes.length; i++){
+            bikes[i]=this.bikes[i]
+        }
+
+        return bikes
+    }
+
+    listRents(): Rent[]{
+        var i=0
+        var rents = []
+
+        for(i; i< this.rents.length; i++){
+            rents[i]=this.rents[i]
+        }
+
+        return rents
+    }
+
+    autenticaUser(senha: string, email: string): void{
+        const testUser = this.findUser(email)
+        if(testUser?.password === senha){
+            console.log('Login realizado')
+        }else{
+            console.log('Usúario ou senha incorreto!')
+        }
+    }
 }
