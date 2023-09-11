@@ -1,32 +1,56 @@
 import { App } from "./app";
 import { Bike } from "./bike";
 import { Rent } from "./rent";
+import { Time } from "./time";
 import { User } from "./user";
 
-const bike = new Bike('mountain bike', 'mountain', 123, 500, 100.5, 'desc', 5, [], '1');
-const user = new User('Maria', 'maria@mail.com', '1234');
-const today = new Date();
-const twoDaysFromToday = new Date();
-twoDaysFromToday.setDate(twoDaysFromToday.getDate() + 2);
-const tomorrow = new Date();
-tomorrow.setDate(tomorrow.getDate() + 1);
-const sevenDaysFromToday = new Date();
-sevenDaysFromToday.setDate(sevenDaysFromToday.getDate() + 7);
-const rent1 = Rent.create([], bike, user, today, twoDaysFromToday);
-const user2 = new User('Marta', 'marta@mail.com', '3123');
-const bike2 = new Bike('caloi', 'caloi zero', 23, 300, 98.9, 'desc', 5, [], "2");
+const app = new App()
+async function registerAndPrintUsers() {
+    try {
+        const bike = new Bike('caloi mountain', 'mountain bike', 100, 200, 150.5, 'My bike', 5, []);
+        const bikeId = app.registerBike(bike);
 
-const app = new App();
+        // Registrar um usuário com senha criptografada
+        const user = new User('Jose', 'jose@mail.com', '1234')
+        const user1 = new User('Pedro', 'pedro@mail.com', 'senha')
+        await app.registerUser(user)
+        await app.registerUser(user1)
+
+        const email = 'pedro@mail.com';
+        const password = 'senha';
+
+        // Autenticar o usuário
+        const isAuthenticated = await app.authenticateUser(email, password)
+        if (isAuthenticated) {
+            console.log('Usuário autenticado com sucesso.')
+        } else {
+            console.log('Credenciais inválidas. Autenticação falhou.')
+        }
+        // Listar os usuários
+        const users = app.listUsers()
+        // console.log('List of users:', users)
+
+        // Realizar um aluguel de bicicleta
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1)
+        const time1 = new Time(0,0)
+        const time2 = new Time(30,1)
+        await app.rentBike(bikeId, user.email, time1)
+        const aluguel = await app.returnBike(bikeId, user.email,time2,time1)
+
+        // Listar os aluguéis
+        const rents = app.listRent()
+        console.log("Aluguel de bicicleta", rents)
+        console.log('valor do aluguel', aluguel)
 
 
-app.addUser(user2);
-const foundUser = app.findUser('marta@mail.com');
-console.log(foundUser)
-app.registraBike(bike2);
-const bikeFind = app.returnBike('2')
-console.log(bikeFind)
-app.addUser(user)
-app.registraBike(bike);
-const alugaBike = app.rentBike(bike, user2, today, twoDaysFromToday);
-console.log(alugaBike)
-app.removeUser(user2)
+        // Listar as bicicletas
+        const bikes = app.listBikes()
+        // console.log('Lista de bicicletas:', bikes)
+
+    } catch (error) {
+        console.error('deu ruim:', error)
+    }
+}
+
+registerAndPrintUsers();
