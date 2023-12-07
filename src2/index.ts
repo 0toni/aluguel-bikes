@@ -21,15 +21,12 @@ async function main() {
         app.rentBike(bikeId, user1.email);
         console.log('Bike disponível: ', bike.available);
 
-        // Avança o relógio em 65 minutos (65 minutos * 60 segundos)
         clock.tick(65 * 60 * 1000);
 
-        // O retorno do aluguel atualiza o estado da bicicleta
         const rentalPrice = app.returnBike(bikeId, user1.email);
         console.log('Preço do aluguel: ', rentalPrice);
         console.log('Bike disponível: ', bike.available);
     } finally {
-        // Restaura o relógio real quando terminar de usar o sinon.useFakeTimers()
         clock.restore();
     }
 }
